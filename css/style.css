@@ -17,26 +17,36 @@ header h1, header a {
   max-width: 50%;
   display: inline-flex;
   text-decoration: none;
-  color: #fff;
+  text-align: center;
+  color: #000;
   font-family: 'Open Sans', sans-serif;
+}
+header h1 {
+  color: #fff;
 }
 nav a {
   padding-right: 25px;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 nav ul {
   list-style:none;
   display: inline-block;
 }
 nav {  
-  float: right;
+  /*float: right;*/
+  text-align: center;
   margin-top: 1%;
 }
-header a:hover {
-  color: #ff0;
+header a:hover, .snippets:hover {
+  color: #800;
+  cursor: pointer;
+  cursor: hand;
 }
 main section {
   max-width: 90%;
   margin: 2% 5%;
+  text-align: center
 }
 
 .container {
