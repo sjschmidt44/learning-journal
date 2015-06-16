@@ -1,17 +1,38 @@
+<!-- The third should be an HTML form page you will use to create a new entry.  
+The title and text of the entry should be inputs in this form, empty at first. -->
 <!DOCTYPE html>
 <html>
 <head>
   <title></title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 </head>
 <body>
-<!-- The third should be an HTML form page you will use to create a new entry.  
-The title and text of the entry should be inputs in this form, empty at first. -->
   <header class="container">
-    
+    <h1>Scott's Learning Journal</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href='new-entry.html'>New Entry</a></li>
+      </ul>
+    </nav>    
   </header>
   <main class="container">
-    
+    <section>
+      <form>
+        <label for='title'>Title</label>
+        <input id='in-title' type='text' name='title' placeholder='I learned something new!' maxlength="140">
+        <label for='entry'>Entry</label>
+        <textarea id='in-text' type='text' name='entry' placeholder='I learned something new!'></textarea>
+        <label for='author'>Author</label>
+        <input id='in-author' type='text' name='author' placeholder='Scott Schmidt' maxlength="140">
+        <label for='date'>Date</label>
+        <input id='in-date' type='date' name='date' placeholder='mm/dd/yyyy'>
+        <button id='submit-new'>Submit</button>
+      </form>
+    </section>
   </main>
   <footer class="container">
     

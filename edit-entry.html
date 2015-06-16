@@ -1,17 +1,40 @@
+<!-- The fourth should be an HTML form page you will use to edit an existing entry.  
+The title and text of the entry should be inputs in this form as well, pre-populated with the text from an entry. -->
 <!DOCTYPE html>
 <html>
 <head>
   <title></title>
+  <!-- <link rel="stylesheet" type="text/css" href="css/reset.css"> -->
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 </head>
 <body>
-<!-- The fourth should be an HTML form page you will use to edit an existing entry.  
-The title and text of the entry should be inputs in this form as well, pre-populated with the text from an entry. -->
   <header class="container">
-    
+    <h1>Scott's Learning Journal</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li id="new-entry">New Entry</li>
+      </ul>
+    </nav>
   </header>
   <main class="container">
-    
+    <section>
+      <form>
+        <label for='title'>Title</label>
+        <input id='edit-title' type='text' name='title' placeholder='I learned something new!' maxlength="140">
+        <label for='entry'>Entry</label>
+        <textarea id='edit-text' type='text' name='entry' placeholder='I learned something new!'></textarea>
+        <label for='author'>Author</label>
+        <input id='edit-author' type='text' name='author' placeholder='Scott Schmidt' maxlength="140">
+        <label for='date'>Date</label>
+        <input id='edit-date' type='date' name='date' placeholder='mm/dd/yyyy'>
+        <button id='submit-new'>Submit</button>
+        <button id='cancel'>Cancel</button>
+      </form>
+    </section>
   </main>
   <footer class="container">
     
