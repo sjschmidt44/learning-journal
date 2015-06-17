@@ -3,31 +3,31 @@ html, body, main, h1, h2, h3, p, img, ul, li, form, label, article, aside, foote
   padding:0;
   border:0;
 }
-header {
+body {
   background-image: url('../img/header-bg.jpg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: auto contain;
+}
+header {
   height: 150px;
-  text-align: center;
-  color: #fff;
-  font-family: 'Open Sans', sans-serif;
+  text-align: left;
+  padding: 0 2rem;
 }
 header h1, header a {
   max-width: 50%;
   display: inline-flex;
   text-decoration: none;
-  text-align: center;
-  color: #000;
+  /*text-align: left;*/
+  color: #fff;
   font-family: 'Open Sans', sans-serif;
 }
-header h1 {
-  color: #fff;
-}
+
 nav a {
   padding-right: 25px;
   font-size: 1.2rem;
   font-weight: bold;
+  color: #eee
 }
 nav ul {
   list-style:none;
@@ -35,18 +35,18 @@ nav ul {
   padding-right: 2%;
 }
 nav {  
-  text-align: center;
+  text-align: left;
   margin-top: 1%;
 }
 header a:hover, .snippets:hover {
-  color: #800;
+  color: #288;
   cursor: pointer;
   cursor: hand;
 }
-main section {
+main section, label {
   max-width: 90%;
-  margin: 2% 5%;
-  text-align: center
+  margin: 2%;
+  text-align: left
 }
 input#in-title, textarea#in-text, input#edit-title, textarea#edit-text {
   width: 95%;
@@ -54,4 +54,13 @@ input#in-title, textarea#in-text, input#edit-title, textarea#edit-text {
   border: 3px solid #cccccc;
   padding: 5px;
   font-family: Tahoma, sans-serif;
+}
+textarea#in-text {
+  height: 200px;
+}
+main {
+  font-family: 'Open Sans', sans-serif;
+  background-color: rgba(255, 255, 255, 0.75);
+  padding: 2rem;
+  margin: 0 auto;
 }
