@@ -32,9 +32,9 @@ nav a {
 nav ul {
   list-style:none;
   display: inline-block;
+  padding-right: 2%;
 }
 nav {  
-  /*float: right;*/
   text-align: center;
   margin-top: 1%;
 }
@@ -47,10 +47,6 @@ main section {
   max-width: 90%;
   margin: 2% 5%;
   text-align: center
-}
-
-.container {
-  /*max-height: 100px;*/
 }
 input#in-title, textarea#in-text, input#edit-title, textarea#edit-text {
   width: 95%;
