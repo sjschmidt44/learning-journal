@@ -25,6 +25,16 @@ class Entry(Base):
             self.title, self.timestamp
         )
 
+DATABASE_URL = os.environ.get(
+    'DATABASE_URL',
+    "postgresql://Scott@localhost:5432/learning-journal"
+)
+
+
+def init_db():
+    engine = sa.create_engine(DATABASE_URL, echo=True)
+    Base.metadata.create_all(engine)
+
 
 @view_config(route_name='home', renderer='string')
 def home(request):
