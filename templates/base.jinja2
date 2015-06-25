@@ -1,28 +1,26 @@
 <!DOCTYPE html>
-<html lang='en'>
+
+<html>
 <head>
-  <meta charset='utf-8'>
-  <title>Python Learning journal</title>
-  <!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
+  <title>Learning Journal</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="static/css/style.css">
 </head>
 <body>
-  <header>
+  <header class="container">
+    <h1>Scott's Learning Journal</h1>
     <nav>
       <ul>
-        <li><a href='/'>Home</a></li>
+        <li><a href="/detail">Detail</a></li>
+        <li><a href='/new-entry'>New Entry</a></li>
       </ul>
     </nav>
   </header>
-  <main>
-    <h1>My Python Journal</h1>
-    <section id='content'>
-      {% block body %}{% endblock %}
-    </section>
+  <main class="container posts-short">
+    {% block body %}{% endblock %}
   </main>
-  <footer>
-    <p>Created in the Code Fellows Python Dev Accelerator</p>
+  <footer class="container">
   </footer>
+  <script type="text/javascript" src='static/js/app.js'></script>
 </body>
 </html>

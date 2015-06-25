@@ -73,6 +73,7 @@ def main():
     config = Configurator(
         settings=settings
     )
+    config.add_static_view(name='static', path='static/')
     config.include('pyramid_tm')
     config.include('pyramid_jinja2')
     config.add_route('home', '/')
