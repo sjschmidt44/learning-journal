@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
   <title>Learning Journal</title>
@@ -11,8 +10,12 @@
     <h1>Scott's Learning Journal</h1>
     <nav>
       <ul>
-        <li><a href="/detail">Detail</a></li>
-        <li><a href='/new-entry'>New Entry</a></li>
+        {% if not request.authenticated_userid %}
+          <li><a href="{{ request.route_url('login') }}">Login</a></li>
+          <li><a href="{{ request.route_url('home') }}">Home</a></li>
+        {% else %}
+          <li><a href="{{ request.route_url('logout') }}">Logout</a></li>
+        {% endif %}
       </ul>
     </nav>
   </header>
