@@ -1,5 +1,16 @@
 {% extends "base.jinja2" %}
 {% block body %}
+    {% if request.authenticated_userid %}
+    <aside>
+      <form action="{{ request.route_url('add') }}" method="POST" class="add_entry">
+        <label for="title">Title</label>
+        <input id='in-title' type="text" name="title" id="title"/>
+        <label for="text">Text</label>
+        <textarea id='in-text' name="text" id="text" rows="5" cols="80"></textarea>
+        <input id="submit-new" type="submit" value="Submit" name="Submit"/>
+      </form>
+    </aside>
+    {% endif %}
     <h2>Entries</h2>
     {% for entry in entries %}
     <article class='entry' id='entry{{entry.id}}'>

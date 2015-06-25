@@ -13,6 +13,7 @@ header {
   height: 150px;
   text-align: left;
   padding: 0 2rem;
+  margin-bottom: 5%;
 }
 header h1, header a {
   max-width: 50%;
@@ -43,7 +44,7 @@ header a:hover, .snippets:hover {
   cursor: pointer;
   cursor: hand;
 }
-main section, label {
+main aside, label {
   max-width: 90%;
   margin: 2%;
   text-align: left
@@ -56,7 +57,7 @@ input#in-title, textarea#in-text, input#edit-title, textarea#edit-text {
   font-family: Tahoma, sans-serif;
 }
 textarea#in-text {
-  height: 200px;
+  height: 100px;
 }
 main {
   font-family: 'Open Sans', sans-serif;
