@@ -191,6 +191,7 @@ def test_do_login_missing_params(auth_req):
 
 
 INPUT_BTN = '<input id="submit-new" type="submit" value="Submit" name="Submit"/>'
+ENTRY_ONE = 'Logout'
 
 
 def login_helper(username, password, app):
@@ -215,7 +216,7 @@ def test_login_successful(app):
     response = redirect.follow()
     assert response.status_code == 200
     actual = response.body
-    assert INPUT_BTN in actual
+    assert ENTRY_ONE in actual
 
 
 def test_login_fails(app):
