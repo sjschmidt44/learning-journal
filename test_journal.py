@@ -235,3 +235,30 @@ def test_logout(app):
     assert response.status_code == 200
     actual = response.body
     assert INPUT_BTN not in actual
+
+
+def test_create_entry(app):
+    pass
+
+
+def test_detail_page(app):
+    pass
+
+
+def test_entry_no_title_fails(db_session):
+    bad_data = {'text': 'test text'}
+    journal.Entry.write(session=db_session, **bad_data)
+    with pytest.raises(IntegrityError):
+        db_session.flush()
+
+
+def test_read_entries_empty(db_session):
+    entries = journal.Entry.all()
+    assert len(entries) == 0
+
+
+
+
+
+
+
