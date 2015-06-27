@@ -121,27 +121,6 @@ def entry(db_session):
     return entry
 
 
-def test_listing(app, entry):
-    response = app.get('/')
-    assert response.status_code == 200
-    actual = response.body
-    for field in ['title', 'text']:
-        expected = getattr(entry, field, 'absent')
-        assert expected in actual
-
-
-def test_post_to_add_view(app):
-    entry_data = {
-        'title': 'Hello there',
-        'text': 'This is a post',
-    }
-    response = app.post('/add', params=entry_data, status='3*')
-    redirected = response.follow()
-    actual = redirected.body
-    for expected in entry_data.values():
-        assert expected in actual
-
-
 def test_add_no_params(app):
     response = app.post('/add', status=500)
     assert 'IntegrityError' in response.body
@@ -237,28 +216,41 @@ def test_logout(app):
     assert INPUT_BTN not in actual
 
 
-def test_create_entry(app):
-    pass
+def test_new_entry_load(app):
+    username, password = ('admin', 'wrong')
+    response = login_helper(username, password, app)
+    assert response.status_code == 200
+    actual = response.body
+    assert 'Login Failed' in actual
+    assert INPUT_BTN not in actual
 
 
-def test_detail_page(app):
-    pass
+@pytest.fixture()
+def test_entry(db_session):
+    from journal import Entry
+    entry = Entry.write(title="Test", text="Test Text", session=db_session)
+    db_session.flush()
+    return entry
 
 
-def test_entry_no_title_fails(db_session):
-    bad_data = {'text': 'test text'}
-    journal.Entry.write(session=db_session, **bad_data)
-    with pytest.raises(IntegrityError):
-        db_session.flush()
+def test_listing(app, test_entry):
+    username, password = ('admin', 'secret')
+    redirect = login_helper(username, password, app)
+    assert redirect.status_code == 302
+    response = app.get('/detail')
+    assert response.status_code == 200
+    actual = response.body
+    for field in ['title', 'text']:
+        expected = getattr(test_entry, field, 'none')
+        assert expected in actual
 
 
-def test_read_entries_empty(db_session):
-    entries = journal.Entry.all()
-    assert len(entries) == 0
-
-
-
-
-
-
-
+def test_post_to_add_view(app):
+    entry_data = {
+        'title': 'Hello there',
+        'text': 'This is a post',
+    }
+    response = app.post('/add', params=entry_data, status='3*')
+    redirected = response.follow()
+    actual = redirected.body
+    assert entry_data['title'] in actual
