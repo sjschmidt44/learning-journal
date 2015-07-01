@@ -8,3 +8,7 @@ This learning journal details the daily activity from the eight week intensive l
 - As an author I want to edit my journal entries so I can fix errors.
 - As an author I want to use MarkDown to create and edit my entries so that I can format them nicely.
 - As an author I want to see colorized code samples in my journal entries so that I can more easily understand them.
+
+
+[![Build Status](https://travis-ci.org/sjschmidt44/learning-journal.svg?branch=master)](https://travis-ci.org/sjschmidt44/learning-journal)
+
