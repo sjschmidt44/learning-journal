@@ -16,13 +16,15 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from cryptacular.bcrypt import BCRYPTPasswordManager
 from pyramid.security import remember, forget
 
+db_usr = os.environ.get('USER', )
+
 DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension())
 )
 Base = declarative_base()
 DATABASE_URL = os.environ.get(
     'DATABASE_URL',
-    "postgresql://Scott@localhost:5432/learning-journal"
+    "postgresql://" + db_usr + "@localhost:5432/learning-journal"
 )
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -206,4 +208,3 @@ if __name__ == '__main__':
     app = main()
     port = os.environ.get('PORT', 5000)
     serve(app, host='0.0.0.0', port=port)
-    print("hello")
