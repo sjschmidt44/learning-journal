@@ -11,7 +11,7 @@ db_usr = os.environ.get('USER', )
 
 TEST_DATABASE_URL = os.environ.get(
     'DATABASE_URL',
-    'postgresql://' + db_usr + '@localhost:5432/test-learning-journal'
+    'postgresql://' + db_usr + '@localhost:5432/travis_ci_test'
 )
 os.environ['DATABASE_URL'] = TEST_DATABASE_URL
 os.environ['TESTING'] = 'TRUE'
