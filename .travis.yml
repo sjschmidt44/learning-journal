@@ -5,7 +5,7 @@ python:
 
 install: 'pip install -r requirements.txt'
 
-script: py.test -v
+script: py.test
 
 addons:
   postgresql: "9.3"
