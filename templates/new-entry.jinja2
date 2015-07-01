@@ -4,9 +4,9 @@
     <aside>
       <form action="{{ request.route_url('add') }}" method="POST" class="add_entry">
         <label for="title">Title</label>
-        <input id='in-title' type="text" name="title" id="title"/>
+        <input id='in-title' type="text" name="title" id="title" required/>
         <label for="text">Text</label>
-        <textarea id='in-text' name="text" id="text" rows="5" cols="80"></textarea>
+        <textarea id='in-text' name="text" id="text" required></textarea>
         <input id="submit-new" type="submit" value="Submit" name="Submit"/>
       </form>
     </aside>

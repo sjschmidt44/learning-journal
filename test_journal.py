@@ -254,3 +254,16 @@ def test_post_to_add_view(app):
     redirected = response.follow()
     actual = redirected.body
     assert entry_data['title'] in actual
+
+"""New tests for resubmit"""
+
+
+def test_post_without_title(app):
+    entry_data = {
+        'title': 'Hello there',
+        'text': 'This is a post',
+    }
+    response = app.post('/add', params=entry_data, status='3*')
+    redirected = response.follow()
+    actual = redirected.body
+    assert actual is False  # redefine assert

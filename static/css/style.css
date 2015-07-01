@@ -13,7 +13,6 @@ header {
   height: 150px;
   text-align: left;
   padding: 0 2rem;
-  margin-bottom: 5%;
 }
 header h1, header a {
   max-width: 50%;
@@ -23,7 +22,6 @@ header h1, header a {
   color: #fff;
   font-family: 'Open Sans', sans-serif;
 }
-
 nav a {
   padding-right: 25px;
   font-size: 1.2rem;
@@ -32,7 +30,7 @@ nav a {
 }
 nav ul {
   list-style:none;
-  display: inline-block;
+  display: inline-flex;
   padding-right: 2%;
 }
 nav {  

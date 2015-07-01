@@ -20,23 +20,25 @@ DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension())
 )
 Base = declarative_base()
+DATABASE_URL = os.environ.get(
+    'DATABASE_URL',
+    "postgresql://Scott@localhost:5432/learning-journal"
+)
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 class Entry(Base):
     __tablename__ = 'entries'
+
     id = sa.Column(sa.Integer, primary_key=True, autoincrement=True)
-    title = sa.Column(sa.Unicode(128), nullable=False)
+    title = sa.Column(sa.Unicode(127), nullable=False)
     text = sa.Column(sa.UnicodeText, nullable=False)
     timestamp = sa.Column(
-        sa.DateTime, nullable=False, default=datetime.datetime.utcnow)
+        sa.DateTime, nullable=False, default=datetime.datetime.utcnow
+    )
 
-    @classmethod
-    def write(cls, title=None, text=None, session=None):
-        if session is None:
-            session = DBSession
-        new_entry = cls(title=title, text=text)
-        session.add(new_entry)
-        return new_entry
+    def __repr__(self):
+        return self.title
 
     @classmethod
     def all(cls, session=None):
@@ -44,19 +46,33 @@ class Entry(Base):
             session = DBSession
         return session.query(cls).order_by(cls.timestamp.desc()).all()
 
-    def __repr__(self):
-        return "<Entry(title='%s', timestamp='%s')>" % (
-            self.title, self.timestamp
-        )
+    @classmethod
+    def write(cls, title=None, text=None, session=None):
+        if session is None:
+            session = DBSession
+        instance = cls(title=title, text=text)
+        session.add(instance)
+        return instance
 
-DATABASE_URL = os.environ.get(
-    'DATABASE_URL',
-    "postgresql://Scott@localhost:5432/learning-journal"
-)
+    @classmethod
+    def one(cls, eid=None, session=None):
+        if session is None:
+            session = DBSession
+        return session.query(cls).filter(cls.id == eid).one()
+
+    @classmethod
+    def modify(cls, eid=None, title=None, text=None, session=None):
+        if session is None:
+            session = DBSession
+        instance = cls.one(eid)
+        instance.title = title
+        instance.text = text
+        session.add(instance)
+        return instance
 
 
 def init_db():
-    engine = sa.create_engine(DATABASE_URL, echo=True)
+    engine = sa.create_engine(DATABASE_URL)
     Base.metadata.create_all(engine)
 
 
@@ -66,15 +82,21 @@ def list_view(request):
     return {'entries': entries}
 
 
+@view_config(route_name='detail', renderer='templates/detail.jinja2')
+def detail_view(request):
+    entry = Entry.one(request.matchdict['id'])
+    return {'entry': entry}
+
+
 @view_config(route_name='new-entry', renderer='templates/new-entry.jinja2')
-def new_entry(request):
+def create_view(request):
     return {}
 
 
-@view_config(route_name='detail', renderer='templates/detail.jinja2')
-def post_detail(request):
-    entries = Entry.all()
-    return {'entries': entries}
+@view_config(route_name='edit-entry', renderer='templates/edit-entry.jinja2')
+def edit_view(request):
+    entry = Entry.one(request.matchdict['id'])
+    return {'entry': entry}
 
 
 @view_config(route_name='add', request_method='POST')
@@ -85,16 +107,18 @@ def add_entry(request):
     return HTTPFound(request.route_url('home'))
 
 
-@view_config(context=DBAPIError)
-def db_exception(context, request):
-    from pyramid.response import Response
-    response = Response(context.message)
-    response.status_int = 500
-    return response
+@view_config(route_name='modify', request_method='POST')
+def modify_entry(request):
+    eid = request.matchdict['id']
+    title = request.params.get('title')
+    text = request.params.get('text')
+    Entry.modify(eid=eid, title=title, text=text)
+    return HTTPFound(request.route_url('home'))
 
 
 @view_config(route_name='login', renderer='templates/login.jinja2')
 def login(request):
+    """authenticate a user by username/password"""
     username = request.params.get('username', '')
     error = ''
     if request.method == 'POST':
@@ -103,7 +127,7 @@ def login(request):
         try:
             authenticated = do_login(request)
         except ValueError as e:
-            error = e
+            error = str(e)
 
         if authenticated:
             headers = remember(request, username)
@@ -116,6 +140,14 @@ def login(request):
 def logout(request):
     headers = forget(request)
     return HTTPFound(request.route_url('home'), headers=headers)
+
+
+@view_config(context=DBAPIError)
+def db_exception(context, request):
+    from pyramid.response import Response
+    response = Response(context.message)
+    response.status_int = 500
+    return response
 
 
 def main():
@@ -133,7 +165,6 @@ def main():
         engine = sa.create_engine(DATABASE_URL)
         DBSession.configure(bind=engine)
     auth_secret = os.environ.get('JOURNAL_AUTH_SECRET', 'itsaseekrit')
-    # config setup
     config = Configurator(
         settings=settings,
         authentication_policy=AuthTktAuthenticationPolicy(
@@ -142,15 +173,17 @@ def main():
         ),
         authorization_policy=ACLAuthorizationPolicy(),
     )
-    config.add_static_view(name='static', path='static/')
     config.include('pyramid_tm')
     config.include('pyramid_jinja2')
     config.add_route('home', '/')
     config.add_route('add', '/add')
-    config.add_route('new-entry', '/new-entry')
-    config.add_route('detail', '/detail')
     config.add_route('login', '/login')
     config.add_route('logout', '/logout')
+    config.add_route('detail', '/detail/{id}')
+    config.add_route('new-entry', '/new-entry')
+    config.add_route('edit-entry', '/edit-entry/{id}')
+    config.add_route('modify', '/modify/{id}')
+    config.add_static_view('static', os.path.join(HERE, 'static'))
     config.scan()
     app = config.make_wsgi_app()
     return app
