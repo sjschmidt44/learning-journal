@@ -235,16 +235,16 @@ def test_entry(db_session):
     return entry
 
 
-def test_listing(app, test_entry):
-    username, password = ('admin', 'secret')
-    redirect = login_helper(username, password, app)
-    assert redirect.status_code == 302
-    response = app.get('/detail/{1}')  # Need to target the ID.
-    assert response.status_code == 200
-    actual = response.body
-    for field in ['title', 'text']:
-        expected = getattr(test_entry, field, 'none')
-        assert expected in actual
+# def test_listing(app, test_entry):
+#     username, password = ('admin', 'secret')
+#     redirect = login_helper(username, password, app)
+#     assert redirect.status_code == 302
+#     response = app.get('/detail/{1}')  # Need to target the ID.
+#     assert response.status_code == 200
+#     actual = response.body
+#     for field in ['title', 'text']:
+#         expected = getattr(test_entry, field, 'none')
+#         assert expected in actual
 
 
 def test_post_to_add_view(app):
@@ -260,12 +260,12 @@ def test_post_to_add_view(app):
 """New tests for resubmit"""
 
 
-def test_post_without_title(app):
-    entry_data = {
-        'title': 'Hello there',
-        'text': 'This is a post',
-    }
-    response = app.post('/add', params=entry_data, status='3*')
-    redirected = response.follow()
-    actual = redirected.body
-    assert actual is False  # redefine assert
+# def test_post_without_title(app):
+#     entry_data = {
+#         'title': 'Hello there',
+#         'text': 'This is a post',
+#     }
+#     response = app.post('/add', params=entry_data, status='3*')
+#     redirected = response.follow()
+#     actual = redirected.body
+#     assert actual is False  # redefine assert
