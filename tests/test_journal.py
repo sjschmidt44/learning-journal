@@ -237,7 +237,7 @@ def test_listing(app, test_entry):
     username, password = ('admin', 'secret')
     redirect = login_helper(username, password, app)
     assert redirect.status_code == 302
-    response = app.get('/detail')
+    response = app.get('/detail/{1}')  # Need to target the ID.
     assert response.status_code == 200
     actual = response.body
     for field in ['title', 'text']:
