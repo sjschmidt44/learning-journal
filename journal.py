@@ -1,20 +1,26 @@
-# _*_ coding: utf-8 _*_
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import os
+import datetime
+import re
 from pyramid.config import Configurator
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.security import remember, forget
 from waitress import serve
 import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
-import datetime
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import scoped_session, sessionmaker
 from zope.sqlalchemy import ZopeTransactionExtension
-from pyramid.httpexceptions import HTTPFound
-from sqlalchemy.exc import DBAPIError
-from pyramid.authentication import AuthTktAuthenticationPolicy
-from pyramid.authorization import ACLAuthorizationPolicy
 from cryptacular.bcrypt import BCRYPTPasswordManager
-from pyramid.security import remember, forget
+from pygments.lexers.python import PythonLexer
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
+
+from markdown import markdown
 
 db_usr = os.environ.get('USER', )
 
@@ -71,6 +77,17 @@ class Entry(Base):
         instance.text = text
         session.add(instance)
         return instance
+
+    def markd_in(self, text):
+        html_text = markdown(self.text, output_format='html5')
+
+        def my_highlight(matchobj):
+            return highlight(matchobj.group(0), PythonLexer(), HtmlFormatter())
+
+        pattern = r'(?<=<code>)[\s\S]*(?=<\/code>)'
+        html_text = re.sub(pattern, my_highlight, html_text)
+
+        return html_text
 
 
 def init_db():
