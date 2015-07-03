@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 import os
 import datetime
-import re
 from pyramid.config import Configurator
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -16,9 +15,6 @@ from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import scoped_session, sessionmaker
 from zope.sqlalchemy import ZopeTransactionExtension
 from cryptacular.bcrypt import BCRYPTPasswordManager
-from pygments.lexers.python import PythonLexer
-from pygments.formatters.html import HtmlFormatter
-from pygments import highlight
 
 from markdown import markdown
 
@@ -79,15 +75,7 @@ class Entry(Base):
         return instance
 
     def markd_in(self, text):
-        html_text = markdown(self.text, output_format='html5')
-
-        def my_highlight(matchobj):
-            return highlight(matchobj.group(0), PythonLexer(), HtmlFormatter())
-
-        pattern = r'(?<=<code>)[\s\S]*(?=<\/code>)'
-        html_text = re.sub(pattern, my_highlight, html_text)
-
-        return html_text
+        return markdown(text, extensions=['codehilite', 'fenced_code'])
 
 
 def init_db():
