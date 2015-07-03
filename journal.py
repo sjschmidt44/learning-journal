@@ -22,7 +22,7 @@ from pygments import highlight
 
 from markdown import markdown
 
-db_usr = os.environ.get('USER', )
+# db_usr = os.environ.get('USER', )
 
 DBSession = scoped_session(
     sessionmaker(extension=ZopeTransactionExtension())
@@ -30,7 +30,7 @@ DBSession = scoped_session(
 Base = declarative_base()
 DATABASE_URL = os.environ.get(
     'DATABASE_URL',
-    "postgresql://" + db_usr + "@localhost:5432/learning-journal"
+    "postgresql://Scott@localhost:5432/learning-journal"
 )
 HERE = os.path.dirname(os.path.abspath(__file__))
 
