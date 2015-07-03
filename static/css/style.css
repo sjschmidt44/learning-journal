@@ -104,12 +104,3 @@ input[type="button"]:hover {
   cursor: pointer;
   cursor: hand;
 }
-.highlight code, .highlight pre{
-    color:#fdce93;
-    background-color:#3f3f3f;
-    /*padding: 10px;*/
-    font-family: monospace;
-    font-size: 120%;
-    overflow: scroll;
-    border-radius: 10px;
-}
