@@ -6,17 +6,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from pyramid import testing
 from cryptacular.bcrypt import BCRYPTPasswordManager
+from bs4 import BeautifulSoup
 
-db_usr = os.environ.get('USER', )
+# db_usr = os.environ.get('USER', )
 
 TEST_DATABASE_URL = os.environ.get(
     'DATABASE_URL',
-    'postgresql://' + db_usr + '@localhost:5432/travis_ci_test'
+    'postgresql://Scott@localhost:5432/learning-journal'
 )
 os.environ['DATABASE_URL'] = TEST_DATABASE_URL
 os.environ['TESTING'] = 'TRUE'
 
 import journal
+
+"""There is a problem with connection and or db_session"""
 
 
 @pytest.fixture(scope='session')
@@ -40,6 +43,15 @@ def db_session(request, connection):
 
     from journal import DBSession
     return DBSession
+
+
+def login_helper(username, password, app):
+    """
+    Encapsulate app login for reuse in test_do_login_success
+    Accept all status codes so that we can make assertions in tests
+    """
+    login_data = {'username': username, 'password': password}
+    return app.post('/login', params=login_data, status='*')
 
 
 def test_write_entry(db_session):
@@ -175,15 +187,6 @@ INPUT_BTN = '<input id="submit-new" type="submit" value="Submit" name="Submit"/>
 ENTRY_ONE = 'Logout'
 
 
-def login_helper(username, password, app):
-    """
-    Encapsulate app login for reuse in test_do_login_success
-    Accept all status codes so that we can make assertions in tests
-    """
-    login_data = {'username': username, 'password': password}
-    return app.post('/login', params=login_data, status='*')
-
-
 def test_start_as_anonymous(app):
     response = app.get('/', status=200)
     actual = response.body
@@ -239,11 +242,11 @@ def test_entry(db_session):
 #     username, password = ('admin', 'secret')
 #     redirect = login_helper(username, password, app)
 #     assert redirect.status_code == 302
-#     response = app.get('/detail/{1}')  # Need to target the ID.
+#     response = app.get('/detail/1')  # Need to target the ID.
 #     assert response.status_code == 200
 #     actual = response.body
 #     for field in ['title', 'text']:
-#         expected = getattr(test_entry, field, 'none')
+#         expected = getattr(post, field, 'none')
 #         assert expected in actual
 
 
@@ -260,12 +263,56 @@ def test_post_to_add_view(app):
 """New tests for resubmit"""
 
 
-# def test_post_without_title(app):
-#     entry_data = {
-#         'title': 'Hello there',
-#         'text': 'This is a post',
-#     }
-#     response = app.post('/add', params=entry_data, status='3*')
-#     redirected = response.follow()
-#     actual = redirected.body
-#     assert actual is False  # redefine assert
+def test_login_notice_new_entry(app):
+    response = app.get('/new-entry', status=200)
+    actual = response.body
+    expected = '<h1>Please Login</h1>'
+    assert expected in actual
+
+
+# def test_login_notice_edit_entry(app):
+#     """This needs to be fixed."""
+#     # test_post_to_add_view(app)
+#     # app.get('/logout', status='3*')
+#     response = app.get('/edit-entry/1')
+#     actual = response.body
+#     expected = '<h1>Please Login</h1>'
+#     assert expected in actual
+
+
+def test_update_post(app, test_entry):
+    username, password = 'admin', 'secret'
+    login_helper(username, password, app)
+    test_post_to_add_view(app)
+    entry_update = {
+        'title': "Updated Title",
+        'text': "Updated Text"
+    }
+    response = app.post('/edit-entry/1', params=entry_update)
+    redirect = response.follow()
+    actual = redirect.body
+    assert entry_update['text'] in actual
+
+
+def test_new_entry_with_markdown(app):
+    username, password = 'admin', 'secret'
+    login_helper(username, password, app)
+    title = "#The new title"
+    text = "```python\r\ndef fun():\r\n\treturn 'happy'\r\n```"
+    submit = app.post("/add_entry", {"title": title, "text": text})
+    response = submit.follow()
+    soup = response.html
+    expected_title = '<h1>The new entry</h1>'
+    assert expected_title in soup
+
+
+def test_new_entry_with_code_block(app):
+    username, password = 'admin', 'secret'
+    login_helper(username, password, app)
+    title = "#The new title"
+    text = "```python\r\ndef fun():\r\n\treturn 'happy'\r\n```"
+    submit = app.post("/add_entry", {"title": title, "text": text})
+    response = submit.follow()
+    soup = response.html
+    expected_code = '<span class="p">():</span>'
+    assert expected_code in soup

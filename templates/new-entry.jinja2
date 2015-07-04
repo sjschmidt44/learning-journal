@@ -10,5 +10,7 @@
         <input id="submit-new" type="submit" value="Submit" name="Submit"/>
       </form>
     </aside>
+    {% elif not request.authenticated_userid %}
+        <h1>Please Login</h1>
     {% endif %}
 {% endblock %}
