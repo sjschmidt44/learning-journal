@@ -9,7 +9,6 @@
           <div class='entry_body'>
             {{ entry.markd_in(entry.text) | safe }}
           </div>
-        </article>
       {% elif request.authenticated_userid %}
         <article class='entry' id='entry{{entry.id}}'>
           <h3><a href="{{ request.route_url('detail', id=entry.id) }}">{{ entry.title }}</a></h3>
@@ -18,10 +17,10 @@
             {{ entry.markd_in(entry.text) | safe }}
           </div>
         </article>
-      {% endif %}
-    {% else %}
+      {% else %}
         <divclass='entry'>
           <p><em>No entries here so far</em></p>
         </div>
+      {% endif %}
     {% endfor %}
   {% endblock %}

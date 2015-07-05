@@ -74,6 +74,14 @@ class Entry(Base):
         session.add(instance)
         return instance
 
+    @classmethod
+    def delete(cls, eid=None, session=None):
+        if session is None:
+            session = DBSession
+        instance = cls.one(eid)
+        session.delete(instance)
+        return instance
+
     def markd_in(self, text):
         return markdown(text, extensions=['codehilite', 'fenced_code'])
 
@@ -143,6 +151,13 @@ def login(request):
     return {'error': error, 'username': username}
 
 
+@view_config(route_name='delete', request_method='POST')
+def delete(request):
+    eid = request.matchdict['id']
+    Entry.delete(eid=eid)
+    return HTTPFound(request.route_url('home'))
+
+
 @view_config(route_name='logout')
 def logout(request):
     headers = forget(request)
@@ -190,6 +205,7 @@ def main():
     config.add_route('new-entry', '/new-entry')
     config.add_route('edit-entry', '/edit-entry/{id}')
     config.add_route('modify', '/modify/{id}')
+    config.add_route('delete', '/delete')
     config.add_static_view('static', os.path.join(HERE, 'static'))
     config.scan()
     app = config.make_wsgi_app()
