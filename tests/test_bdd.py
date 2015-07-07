@@ -6,6 +6,9 @@ from pytest_bdd import scenario, given, when, then
 # import journal
 
 
+"""Review webtest docs for supplimental info."""
+
+
 # @pytest.fixture()
 # def pytestbdd_feature_basedir():
 #     return b'~/Projects/pyEnvs/learning-journal/tests/features/'
