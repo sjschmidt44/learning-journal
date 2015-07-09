@@ -7,14 +7,14 @@
           <h3><a href="{{ request.route_url('detail', id=entry.id) }}">{{ entry.title }}</a></h3>
           <p class='dateline'>{{ entry.timestamp.strftime('%b, %d, %y')}}</p>
           <div class='entry_body'>
-            {{ entry.markd_in(entry.text) | safe }}
+            {{ entry.text | safe }}
           </div>
       {% elif request.authenticated_userid %}
         <article class='entry' id='entry{{entry.id}}'>
           <h3><a href="{{ request.route_url('detail', id=entry.id) }}">{{ entry.title }}</a></h3>
           <p class='dateline'>{{ entry.timestamp.strftime('%b, %d, %y')}}</p>
           <div class='entry_body'>
-            {{ entry.markd_in(entry.text) | safe }}
+            {{ entry.text | safe }}
           </div>
         </article>
       {% else %}

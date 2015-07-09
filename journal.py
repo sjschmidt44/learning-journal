@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 import os
 import datetime
+# import json
 from pyramid.config import Configurator
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -62,7 +63,9 @@ class Entry(Base):
     def one(cls, eid=None, session=None):
         if session is None:
             session = DBSession
-        return session.query(cls).filter(cls.id == eid).one()
+        """return session.query(cls).get(eid)"""
+        # return session.query(cls).filter(cls.id == eid).one()
+        return session.query(cls).get(eid)
 
     @classmethod
     def modify(cls, eid=None, title=None, text=None, session=None):
@@ -82,9 +85,6 @@ class Entry(Base):
         session.delete(instance)
         return instance
 
-    def markd_in(self, text):
-        return markdown(text, extensions=['codehilite', 'fenced_code'])
-
 
 def init_db():
     engine = sa.create_engine(DATABASE_URL)
@@ -94,12 +94,26 @@ def init_db():
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def list_view(request):
     entries = Entry.all()
+    for entry in entries:
+        entry.text = markdown(
+            entry.text,
+            extensions=['codehilite', 'fenced_code']
+        )
     return {'entries': entries}
 
 
 @view_config(route_name='detail', renderer='templates/detail.jinja2')
 def detail_view(request):
-    entry = Entry.one(request.matchdict['id'])
+    entry_one = Entry.one(request.matchdict['id'])
+    entry = {
+        'id': entry_one.id,
+        'title': entry_one.title,
+        'timestamp': entry_one.timestamp,
+        'text': markdown(
+            entry_one.text,
+            extensions=['codehilite', 'fenced_code']
+        )
+    }
     return {'entry': entry}
 
 
@@ -108,8 +122,14 @@ def create_view(request):
     return {}
 
 
-@view_config(route_name='edit-entry', renderer='templates/edit-entry.jinja2')
+# @view_config(route_name='edit-entry', xhr=True, renderer='json')
+@view_config(
+    route_name='edit-entry',
+    xhr=False,
+    renderer='templates/edit-entry.jinja2'
+)
 def edit_view(request):
+    """Work in progress."""
     entry = Entry.one(request.matchdict['id'])
     return {'entry': entry}
 
@@ -133,8 +153,8 @@ def modify_entry(request):
 
 @view_config(route_name='delete', request_method='POST')
 def delete(request):
-    eid = request.matchdict['id']
-    Entry.delete(eid=eid)
+    entry = request.matchdict['id']
+    Entry.delete(eid=entry.id)
     return HTTPFound(request.route_url('home'))
 
 

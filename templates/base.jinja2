@@ -2,10 +2,12 @@
 <html>
 <head>
   <title>Learning Journal</title>
-  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,800' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" type="text/css" href="/static/css/style.css">
   <link rel="stylesheet" type="text/css" href="/static/css/pygments.css">
   <link rel="icon" type="image/png" href="img/favicon-96x96.png" sizes="96x96">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
 </head>
 <body>
   <section class='bg'><img src="../static/img/header-bg.jpg" alt="bg"></section>
@@ -25,7 +27,8 @@
     </nav>
   </header>
   <main class="container posts-short">
-    {% block section %}{% endblock %}
+  {% block section %}{% endblock %}
+
   </main>
   <footer class="container">
   </footer>
