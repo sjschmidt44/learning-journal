@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 import os
 import datetime
-# import json
 from pyramid.config import Configurator
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -63,8 +62,6 @@ class Entry(Base):
     def one(cls, eid=None, session=None):
         if session is None:
             session = DBSession
-        """return session.query(cls).get(eid)"""
-        # return session.query(cls).filter(cls.id == eid).one()
         return session.query(cls).get(eid)
 
     @classmethod
@@ -85,6 +82,10 @@ class Entry(Base):
         session.delete(instance)
         return instance
 
+    @property
+    def markdown(self):
+        return markdown(self.text, extensions=['codehilite', 'fenced_code'])
+
 
 def init_db():
     engine = sa.create_engine(DATABASE_URL)
@@ -94,26 +95,12 @@ def init_db():
 @view_config(route_name='home', renderer='templates/list.jinja2')
 def list_view(request):
     entries = Entry.all()
-    for entry in entries:
-        entry.text = markdown(
-            entry.text,
-            extensions=['codehilite', 'fenced_code']
-        )
     return {'entries': entries}
 
 
 @view_config(route_name='detail', renderer='templates/detail.jinja2')
 def detail_view(request):
-    entry_one = Entry.one(request.matchdict['id'])
-    entry = {
-        'id': entry_one.id,
-        'title': entry_one.title,
-        'timestamp': entry_one.timestamp,
-        'text': markdown(
-            entry_one.text,
-            extensions=['codehilite', 'fenced_code']
-        )
-    }
+    entry = Entry.one(request.matchdict['id'])
     return {'entry': entry}
 
 
