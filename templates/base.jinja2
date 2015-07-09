@@ -21,14 +21,22 @@
         {% else %}
           <li><a href="{{ request.route_url('logout') }}">Logout</a></li>
           <li><a href="{{ request.route_url('home') }}">Home</a></li>
-          <li><a href="{{ request.route_url('new-entry') }}">New Entry</a></li>
+          <li><a  id='ajax_new' href="{{ request.route_url('new-entry') }}">New Entry</a></li>
         {% endif %}
       </ul>
     </nav>
   </header>
   <main class="container posts-short">
+    <section id='a_new_entry' hidden>
+      <form action="{{ request.route_url('add') }}" method="POST" class="add_entry">
+        <label for="title">Title</label>
+        <input id='in-title' type="text" name="title" id="title" required/>
+        <label for="text">Text</label>
+        <textarea id='in-text' name="text" id="text" required></textarea>
+        <input id="submit_ajax" type="submit" value="Submit" name="Submit"/>
+      </form>
+    </section>
   {% block section %}{% endblock %}
-
   </main>
   <footer class="container">
   </footer>

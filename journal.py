@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import os
+import json
 import datetime
+import sqlalchemy as sa
+from waitress import serve
 from pyramid.config import Configurator
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import remember, forget
-from waitress import serve
-import sqlalchemy as sa
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import scoped_session, sessionmaker
 from zope.sqlalchemy import ZopeTransactionExtension
 from cryptacular.bcrypt import BCRYPTPasswordManager
-
 from markdown import markdown
 
 # db_usr = os.environ.get('USER', )
@@ -80,7 +80,6 @@ class Entry(Base):
             session = DBSession
         instance = cls.one(eid)
         session.delete(instance)
-        return instance
 
     @property
     def markdown(self):
@@ -109,15 +108,19 @@ def create_view(request):
     return {}
 
 
-# @view_config(route_name='edit-entry', xhr=True, renderer='json')
+@view_config(route_name='edit-entry', xhr=True, renderer='json')
 @view_config(
     route_name='edit-entry',
     xhr=False,
     renderer='templates/edit-entry.jinja2'
 )
 def edit_view(request):
-    """Work in progress."""
+    """Work in progress"""
     entry = Entry.one(request.matchdict['id'])
+    if request.method == 'GET':
+        entry = json.dumps(entry)
+        return {'entry': entry}
+
     return {'entry': entry}
 
 
