@@ -16,19 +16,34 @@ $('#input-forward').on('click', function(e) {
   }).done(function(response) {
     $('#in-title').val(response.title),
     $('#in-text').val(response.text),
-    $('.entry_body').slideToggle()
+    $('.entry').slideToggle()
   }).fail(function() {
     alert("Shit's brokedededed.")
   })
 })
 
 // Submit Edit to the DB and close the 
+$("#save_ajax").on("click", function (e) {
+  e.preventDefault();
 
+  var id = $("#id").text();
+  var title = $("#in-title").val();
+  var text = $("#in-text").val();
 
-// <form action="{{ request.route_url('add') }}" method="POST" class="add_entry">
-//   <label for="title">Title</label>
-//   <input id='in-title' type="text" name="title" id="title" required/>
-//   <label for="text">Text</label>
-//   <textarea id='in-text' name="text" id="text" required></textarea>
-//   <input id="submit_ajax" type="submit" value="Submit" name="Submit"/>
-// </form>
+  $.ajax({
+    method: "POST",
+    url: "/edit-entry/" + id,
+    data: {
+        id: id,
+        title: title,
+        text: text
+    }
+  }).done(function(response) {
+      $("#d_title").html(response.title);
+      $("#d_text").html(response.text);
+      $(".entry").slideToggle();
+    })
+    .fail(function() {
+      alert( "error" );
+    });
+});

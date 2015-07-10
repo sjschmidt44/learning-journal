@@ -106,3 +106,7 @@ button   {
   cursor: pointer;
   cursor: hand;
 }
+.twitter {
+  max-width: 3rem;
+  max-height: 3rem;
+}

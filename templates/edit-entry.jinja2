@@ -4,6 +4,7 @@
     <button type='submit' id="del" onclick="window.location='{{ request.route_url('delete', id=entry.id) }}'">Delete Entry</button>
     <form id="edit-form" action="{{ request.route_url('modify', id=entry.id) }}" method="POST">
         <h2>Edit Entry</h2>
+        <p id='id' hidden>{{ entry.id }}</p>
         <input id="in-title" name="title" placeholder="Title" type="text" value="{{ entry.title }}">
         <textarea id="in-text" name="text" placeholder="Entry Text">{{ entry.text }}</textarea>
         <input id="submit-new" type="submit" value="Submit" name="Submit"/>

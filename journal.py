@@ -6,6 +6,7 @@ import datetime
 import sqlalchemy as sa
 from waitress import serve
 from pyramid.config import Configurator
+from pyramid.response import Response
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.authentication import AuthTktAuthenticationPolicy
@@ -115,17 +116,26 @@ def create_view(request):
     renderer='templates/edit-entry.jinja2'
 )
 def edit_view(request):
-    """Work in progress"""
-    entry = Entry.one(request.matchdict['id'])
-    if request.method == 'GET':
-        entry = json.dumps(entry)
-        return {'entry': entry}
-
-    return {'entry': entry}
+    entry = Entry.one(request.matchdict["id"])
+    if 'HTTP_X_REQUESTED_WITH' in request.environ:
+        return Response(
+            body=json.dumps({
+                "title": entry.title,
+                "text": entry.text}), content_type=b'application/json')
+    return {
+        "entry": {
+            "id": entry.id,
+            "title": entry.title,
+            "text": entry.text,
+            "timestamp": entry.timestamp
+        }
+    }
 
 
 @view_config(route_name='add', request_method='POST')
 def add_entry(request):
+    if not request.authenticated_userid:
+        return HTTPFound(request.route_url('home'))
     title = request.params.get('title')
     text = request.params.get('text')
     Entry.write(title=title, text=text)
@@ -134,6 +144,8 @@ def add_entry(request):
 
 @view_config(route_name='modify', request_method='POST')
 def modify_entry(request):
+    if not request.authenticated_userid:
+        return HTTPFound(request.route_url('home'))
     eid = request.matchdict['id']
     title = request.params.get('title')
     text = request.params.get('text')
@@ -141,10 +153,12 @@ def modify_entry(request):
     return HTTPFound(request.route_url('home'))
 
 
-@view_config(route_name='delete', request_method='POST')
+@view_config(route_name='delete')
 def delete(request):
+    if not request.authenticated_userid:
+        return HTTPFound(request.route_url('home'))
     entry = request.matchdict['id']
-    Entry.delete(eid=entry.id)
+    Entry.delete(eid=entry)
     return HTTPFound(request.route_url('home'))
 
 
@@ -215,7 +229,7 @@ def main():
     config.add_route('new-entry', '/new-entry')
     config.add_route('edit-entry', '/edit-entry/{id}')
     config.add_route('modify', '/modify/{id}')
-    config.add_route('delete', '/delete')
+    config.add_route('delete', '/delete/{id}')
     config.add_static_view('static', os.path.join(HERE, 'static'))
     config.scan()
     app = config.make_wsgi_app()

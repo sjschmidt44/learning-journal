@@ -6,17 +6,20 @@
         <p class='dateline'>{{ entry.timestamp.strftime('%b, %d, %y')}}</p>
         <div class='entry_body'>
           {{ entry.markdown | safe }}
+        <a href="http://twitter.com/home?status={{entry.title}} http://learning-journal.scottjschmidt.com/detail/{{ entry.id }}"><img src="/static/img/twitter.png" alt="Twitter" class='twitter'></a>
         </div>
       </article>
     {% elif request.authenticated_userid %}
-          <article class='entry' id='entry{{entry.id}}'>
-            <h3>{{ entry.title }}</h3>
-            <p id='id' hidden>{{ entry.id }}</p>
-            <button id="input-forward">Edit Entry</button>
-            <p class='dateline'>{{ entry.timestamp.strftime('%b, %d, %y')}}</p>
-            <div class='entry_body'>
-              {{ entry.markdown | safe }}
-            </div>
-          </article>
+      <article class='entry' id='entry{{entry.id}}'>
+        <h3 id='d_title'>{{ entry.title }}</h3>
+        <p id='id' hidden>{{ entry.id }}</p>
+        <button id="input-forward">Edit Entry</button>
+        <button type='submit' id="del" onclick="window.location='{{ request.route_url('delete', id=entry.id) }}'">Delete Entry</button>
+        <p class='dateline'>{{ entry.timestamp.strftime('%b, %d, %y')}}</p>
+        <div class='d_text'>
+          {{ entry.markdown | safe }}
+          <a href="http://twitter.com/home?status={{entry.title}} http://learning-journal.scottjschmidt.com/detail/{{ entry.id }}"><img src="/static/img/twitter.png" alt="Twitter" class='twitter'></a>
+        </div>
+      </article>
     {% endif %}
   {% endblock %}
