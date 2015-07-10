@@ -98,6 +98,7 @@ button {
   cursor: pointer;
   box-sizing: border-box; 
 }
+
 input[type="submit"]:hover,
 input[type="reset"]:hover,
 input[type="button"]:hover,
@@ -106,10 +107,12 @@ button   {
   cursor: pointer;
   cursor: hand;
 }
+
 .twitter {
   max-width: 3rem;
   max-height: 3rem;
 }
+
 #del_confirm {
   background-color: #228888;
   color: white;
