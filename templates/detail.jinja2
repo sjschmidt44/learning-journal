@@ -14,7 +14,8 @@
         <h3 id='d_title'>{{ entry.title }}</h3>
         <p id='id' hidden>{{ entry.id }}</p>
         <button id="input-forward">Edit Entry</button>
-        <button type='submit' id="del" onclick="window.location='{{ request.route_url('delete', id=entry.id) }}'">Delete Entry</button>
+        <button type="submit" id='del_verify'>Delete Entry</button>
+        <button type='submit' id="del_confirm" onclick="window.location='{{ request.route_url('delete', id=entry.id) }}'">Confirm Delete</button>
         <p class='dateline'>{{ entry.timestamp.strftime('%b, %d, %y')}}</p>
         <div class='d_text'>
           {{ entry.markdown | safe }}

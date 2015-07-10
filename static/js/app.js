@@ -1,7 +1,17 @@
+// Delete button handler
+$(document).ready(function() {
+  $('#del_confirm').hide();
+})
+$('#del_verify').on('click', function() {
+  $(this).hide();
+  $('#del_confirm').show();
+})
+
 // Toggle Add New element from any page.
 $('#ajax_new').on('click', function(e) {
   e.preventDefault();
   $('#a_new_entry').slideToggle();
+  $('.all_entries').slideToggle();
 })
 
 // Request ajax call to DB for Edit Entry from Detail page.

@@ -110,3 +110,7 @@ button   {
   max-width: 3rem;
   max-height: 3rem;
 }
+#del_confirm {
+  background-color: #228888;
+  color: white;
+}
