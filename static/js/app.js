@@ -32,7 +32,7 @@ $('#input-forward').on('click', function(e) {
   })
 })
 
-// Submit Edit to the DB and close the 
+// Submit Edit to the DB and close the form.
 $("#save_ajax").on("click", function (e) {
   e.preventDefault();
 

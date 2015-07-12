@@ -18,11 +18,11 @@
             {{ entry.markdown | safe }}
           </div>
         </article>
-      {% else %}
-        <divclass='entry'>
+      {% endif %}
+    {% else %}
+        <div class='entry'>
           <p><em>No entries here so far</em></p>
         </div>
-      {% endif %}
     {% endfor %}
   </section>
-  {% endblock %}
+{% endblock %}

@@ -47,6 +47,17 @@ def app(db_session):
 
 
 @pytest.fixture()
+def entry(db_session):
+    entry = journal.Entry.write(
+        title='Test Title',
+        text='Test Entry Text',
+        session=db_session
+    )
+    db_session.flush()
+    return entry
+
+
+@pytest.fixture()
 def homepage(app):
     response = app.get('/')
     return response

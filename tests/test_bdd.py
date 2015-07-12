@@ -1,42 +1,41 @@
 # _*_ coding: utf-8- _*_
 from __future__ import unicode_literals
 from pytest_bdd import scenario, given, when, then
+from test_journal import login_helper
 # import pytest
 
-# import journal
-
-
-"""Review webtest docs for supplimental info."""
-
-
-# @pytest.fixture()
-# def pytestbdd_feature_basedir():
-#     return b'~/Projects/pyEnvs/learning-journal/tests/features/'
+# import journals
 
 
 @scenario('features/homepage.feature', 'Click an entry title')
-def test_entry_exists():
-    """Click and entry title, and navigate to that entry's detail view"""
+def entry_exists():
+    """Click on entry title, and navigate to that entry's detail view"""
     pass
 
 
 @given('I want to have a permalink for each journal entry')
-def test_title_active_anchor_link():
-    pass
+def title_active_anchor_link(app, entry):
+    test_entry = entry['entry']
+    response = app.get('detail/{id}'.format(id=test_entry.id))
+    assert response.status_code == 200
 
 
 @when('I click each journal entry title')
-def test_click_entry():
+def click_entry():
     pass
 
 
 @then('I am directed to a detail page for only that entry')
-def test_detail_page_clicked_title():
-    pass
+def detail_page_clicked_title(app, entry):
+    test_entry = entry['entry']
+    response = app.get('detail/{id}'.format(id=test_entry.id))
+    assert response.status_code == 200
+    redirect = response.follow()
+    assert test_entry.text in redirect.body
 
 
 @scenario('features/homepage.feature', 'Click on the edit button')
-def test_edit_button():
+def edit_button():
     """
     Click the edit button, and have the ability to edit and resubmit to
     that entry in the DB
@@ -45,43 +44,48 @@ def test_edit_button():
 
 
 @given('I want to edit my entry')
-def test_edit_button_available():
-    pass
+def edit_button_available(app, entry):
+    username, password = 'admin', 'secret'
+    login_helper(username, password, app)
+    test_entry = entry['entry']
+    response = app.get('detail/{id}'.format(id=test_entry.id))
+    expected = '<button id="input-forward">Edit Entry</button>'
+    assert expected in response.body
 
 
 @when('I click on the edit button')
-def test_input_area_available():
+def input_area_available():
     pass
 
 
 @then('I can update or fix my entry')
-def test_enter_text_and_submit():
+def enter_text_and_submit():
     pass
 
 
 @scenario('features/homepage.feature', 'View entries with formatted markdown')
-def test_page_loads_from_db():
+def page_loads_from_db():
     """Entries will be formatted with markdown"""
     pass
 
 
 @given('I want to display my entries')
-def test_entries_display():
+def entries_display():
     pass
 
 
 @given('use Markdown to decorate entry text')
-def test_entries_with_markdown():
+def entries_with_markdown():
     pass
 
 
 @when('I load my entries')
-def test_list_view_display():
+def list_view_display():
     pass
 
 
 @then('I can view them formatted nicely')
-def test_markdown_formatting():
+def markdown_formatting():
     pass
 
 
@@ -89,21 +93,21 @@ def test_markdown_formatting():
     'features/homepage.feature',
     'View code block entries with syntax highlighting'
 )
-def test_code_highlighting():
+def code_highlighting():
     """Code blocks will be well formatted with syntax highlighting"""
     pass
 
 
 @given('I want to see colorized code samples in my entries')
-def test_code_sample():
+def code_sample():
     pass
 
 
 @when('I have entered code samples')
-def test_check_backtick_or_indents():
+def check_backtick_or_indents():
     pass
 
 
 @then('I can more easily understand them')
-def test_code_block_formatting():
+def code_block_formatting():
     pass
