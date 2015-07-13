@@ -8,15 +8,14 @@ from test_journal import login_helper
 
 
 @scenario('features/homepage.feature', 'Click an entry title')
-def entry_exists():
+def test_entry_exists():
     """Click on entry title, and navigate to that entry's detail view"""
     pass
 
 
 @given('I want to have a permalink for each journal entry')
 def title_active_anchor_link(app, entry):
-    test_entry = entry['entry']
-    response = app.get('detail/{id}'.format(id=test_entry.id))
+    response = app.get('detail/{id}'.format(id=entry.id))
     assert response.status_code == 200
 
 
@@ -27,15 +26,14 @@ def click_entry():
 
 @then('I am directed to a detail page for only that entry')
 def detail_page_clicked_title(app, entry):
-    test_entry = entry['entry']
-    response = app.get('detail/{id}'.format(id=test_entry.id))
+    response = app.get('detail/{id}'.format(id=entry.id))
     assert response.status_code == 200
     redirect = response.follow()
-    assert test_entry.text in redirect.body
+    assert entry.text in redirect.body
 
 
 @scenario('features/homepage.feature', 'Click on the edit button')
-def edit_button():
+def test_edit_button():
     """
     Click the edit button, and have the ability to edit and resubmit to
     that entry in the DB
@@ -47,8 +45,7 @@ def edit_button():
 def edit_button_available(app, entry):
     username, password = 'admin', 'secret'
     login_helper(username, password, app)
-    test_entry = entry['entry']
-    response = app.get('detail/{id}'.format(id=test_entry.id))
+    response = app.get('detail/{id}'.format(id=entry.id))
     expected = '<button id="input-forward">Edit Entry</button>'
     assert expected in response.body
 
@@ -64,7 +61,7 @@ def enter_text_and_submit():
 
 
 @scenario('features/homepage.feature', 'View entries with formatted markdown')
-def page_loads_from_db():
+def test_page_loads_from_db():
     """Entries will be formatted with markdown"""
     pass
 
@@ -93,7 +90,7 @@ def markdown_formatting():
     'features/homepage.feature',
     'View code block entries with syntax highlighting'
 )
-def code_highlighting():
+def test_code_highlighting():
     """Code blocks will be well formatted with syntax highlighting"""
     pass
 

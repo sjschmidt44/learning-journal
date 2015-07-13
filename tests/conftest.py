@@ -18,7 +18,7 @@ os.environ['TESTING'] = 'True'
 @pytest.fixture(scope='session')
 def connection(request):
     engine = create_engine(TEST_DATABASE_URL)
-    journal.BASE.metadata.create_engine(engine)
+    journal.Base.metadata.create_all(engine)
     connection = engine.connect()
     journal.DBSession.registry.clear()
     journal.DBSession.configure(bind=connection)
