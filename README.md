@@ -14,5 +14,4 @@ This learning journal details the daily activity from the eight week intensive l
 - As an author, I want my existing editing to stay functional so that I can work from a browser without javascript.
 - As an author I want to be able to tweet the title of a post and a link to that post by pressing a button so that I can share what I've learned with my followers.
 
-[![Build Status](https://travis-ci.org/sjschmidt44/learning-journal.svg?branch=master)](https://travis-ci.org/sjschmidt44/learning-journal)
 
